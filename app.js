@@ -62,7 +62,7 @@ client.on('message', message => {
   const sender = message.from;
   const now = Date.now();
 
-  if (supportAgents.includes(sender)) {
+  if (message.from === supportAgents) {
     groupCreator(message.body);
     console.log('Es un agente')
     return;
