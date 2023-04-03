@@ -12,9 +12,8 @@ async function handleMessage(client, message, supportAgents) {
   const sender = message.from;
   const now = Date.now();
 
-  // Verificar si el mensaje proviene de un grupo
-  if (message.isGroupMsg) {
-    console.log('Mensaje de grupo detectado'); // Agrega esta línea
+  // Verificar si el mensaje proviene de un grupo usando el ID del chat
+  if (message.chatId.endsWith('@g.us')) {
     await groupListener(client, message, supportAgents);
     return;
   }
@@ -25,6 +24,7 @@ async function handleMessage(client, message, supportAgents) {
     return;
   }
 
+  // Si no viene de grupo y no es un mensaje de un agente, guardar y reenviar
   if (lastForwarded[sender] && now - lastForwarded[sender] < 3600000) {
     return;
   }
@@ -40,12 +40,10 @@ async function handleMessage(client, message, supportAgents) {
     const ticket = shortid.generate();
     const messages = messageQueue[sender].join('\n');
     client.sendText('120363094061748798@g.us', `Nombre: ${message.sender.name}\nTeléfono: ${sender}\nTicket: ${ticket}\nMensajes:\n${messages}`);
-    
-    // Llama a la función logEvent cuando se ejecuta la línea anterior
+
     logEvent(message.sender.name, sender, ticket, '#open', message.sender.name);
     delete messageQueue[sender];
 
-    // Registrar el mensaje reenviado
     lastForwarded[sender] = now;
 
     console.log(`Mensaje reenviado a ${sender} a las ${new Date().toLocaleString()}`);
