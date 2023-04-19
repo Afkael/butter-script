@@ -175,17 +175,28 @@ venom.create().then((client) => {
     });
   });
 
+  async function eliminarCasosAntiguos() {
+    const horaActual = Date.now();
+    casos = casos.filter((caso) => {
+      const horaCaso = caso[1];
+      const horaDiferencia = horaActual - horaCaso;
+      const unaHoraEnMs = 60 * 60 * 1000;
+      return horaDiferencia < unaHoraEnMs;
+    });
+  }
+
+
 
   // Funciones de prueba
 
-  function eliminarCasosAntiguos() {
-    const tiempoActual = Date.now();
-    const tiempoLimite = 60 * 60 * 1000; // 60 minutos en milisegundos
-    for (let i = 0; i < casos.length; i++) {
-      const tiempoDeCreacion = casos[i].tiempoDeCreacion;
-      if (tiempoActual - tiempoDeCreacion > tiempoLimite) {
-        casos.splice(i, 1);
-        i--;
-      }
-    }
-  }
+//  function eliminarCasosAntiguos() {
+//    const tiempoActual = Date.now();
+//    const tiempoLimite = 60 * 60 * 1000; // 60 minutos en milisegundos
+//    for (let i = 0; i < casos.length; i++) {
+//      const tiempoDeCreacion = casos[i].tiempoDeCreacion;
+//      if (tiempoActual - tiempoDeCreacion > tiempoLimite) {
+//        casos.splice(i, 1);
+//        i--;
+//      }
+//    }
+//  }
