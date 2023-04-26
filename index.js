@@ -52,7 +52,7 @@ const casos = {};
       }
       
       if (message.body.includes('#clean')) {
-        const regex = /#clean\s*([\+\d]+)/;
+        const regex = /#clean (\d+)/;
         const match = message.body.match(regex);
         if (match && match[1]) {
           const telefono = match[1];
