@@ -7,6 +7,7 @@ const fs = require('fs');
 
 // Variables globales
 
+// const ignorados = ['']
 const agenteSoporte = ['5493534253426@c.us', '5493492414226@c.us', '5493536579337@c.us'];
 const casos = {};
 
@@ -19,8 +20,12 @@ const casos = {};
     if (agenteSoporte.includes(message.author)) {
       if (message.body.includes('#close')) {
         const ticket = buscarTicket(message.from);
+        const numero = buscarOrigen(ticket);
         console.log("cerrando caso");
         capturarRegistro(message.sender.pushname, message.author, ticket, '#close', message.from, new Date().toISOString());
+        console.log("eliminando caso");
+        eliminarCasosAntiguos(numero);
+        console.log("caso eliminado");
 
         setTimeout(() => {
           client.sendText(message.from, 'https://forms.office.com/r/ycHk4FphuH').then(() => {
@@ -45,7 +50,20 @@ const casos = {};
       if (message.body.includes('#status')) {
         client.sendText(message.from, 'Estoy Bien, Gracias')
       }
-
+      
+      if (message.body.includes('#clean')) {
+        const regex = /#clean\s*([\+\d]+)/;
+        const match = message.body.match(regex);
+        if (match && match[1]) {
+          const telefono = match[1];
+          eliminarCasosAntiguos(telefono);
+          console.log("limpiando caso para el número de teléfono:", telefono);
+          // haz aquí lo que necesites con el número de teléfono extraído
+        } else {
+          console.log("No se pudo extraer el número de teléfono");
+        }
+      }
+      
     } else {
       console.log("mensaje de usuario");
     }
@@ -163,8 +181,6 @@ const casos = {};
 // Iniciar sesión  //
 //*****************//
 
-setInterval(eliminarCasosAntiguos, 60 * 1000); // se ejecuta cada 60 segundos
-
 venom.create().then((client) => {
     client.onMessage((message) => {
       if (message.chatId.endsWith('g.us')) {
@@ -175,28 +191,38 @@ venom.create().then((client) => {
     });
   });
 
-  async function eliminarCasosAntiguos() {
-    const horaActual = Date.now();
-    casos = casos.filter((caso) => {
-      const horaCaso = caso[1];
-      const horaDiferencia = horaActual - horaCaso;
-      const unaHoraEnMs = 60 * 60 * 1000;
-      return horaDiferencia < unaHoraEnMs;
-    });
+  // Funciones de prueba
+
+  function eliminarCasosAntiguos(telefono) {
+    for (const [numero, caso] of Object.entries(casos)) {
+      if (numero === telefono) {
+        delete casos[numero];
+      }
+    }
   }
 
 
-
-  // Funciones de prueba
-
-//  function eliminarCasosAntiguos() {
-//    const tiempoActual = Date.now();
-//    const tiempoLimite = 60 * 60 * 1000; // 60 minutos en milisegundos
-//    for (let i = 0; i < casos.length; i++) {
-//      const tiempoDeCreacion = casos[i].tiempoDeCreacion;
-//      if (tiempoActual - tiempoDeCreacion > tiempoLimite) {
-//        casos.splice(i, 1);
-//        i--;
-//      }
-//    }
-//  }
+  function buscarOrigen(ticket) {
+    console.log('buscando origen...');
+    const registros = fs.readFileSync('Registros.txt', 'utf-8');
+    const lineas = registros.split('\n');
+    
+    // Recorremos todas las líneas en el archivo
+    for (const linea of lineas) {
+      const campos = linea.split(',');
+      const fecha = campos[0];
+      const nombre = campos[1];
+      const telefono = campos[2];
+      const ticketRegistro = campos[3];
+      const estado = campos[4];
+      const origen = campos[5];
+      
+      // Si el número de ticket coincide con el ticket en la línea y el estado es '#open', devolvemos el origen
+      if (ticketRegistro === ticket && estado === '#open') {
+        return origen;
+      }
+    }
+    
+    // Si no encontramos un registro correspondiente, devolvemos null o una cadena vacía
+    return null;
+  }
