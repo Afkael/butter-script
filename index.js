@@ -21,17 +21,12 @@ const casos = {};
       if (message.body.includes('#close')) {
         const ticket = buscarTicket(message.from);
         const numero = buscarOrigen(ticket);
-        console.log("cerrando caso");
         capturarRegistro(message.sender.pushname, message.author, ticket, '#close', message.from, new Date().toISOString());
-        console.log("eliminando caso");
         eliminarCasosAntiguos(numero);
-        console.log("caso eliminado");
 
         setTimeout(() => {
-          client.sendText(message.from, 'https://forms.office.com/r/ycHk4FphuH').then(() => {
-            console.log('Mensaje enviado con éxito');
+          client.sendText(message.from, 'El agente a marcado tu caso como "resuelto" y ya no se dará seguimiento a los mensajes recibidos dentro de éste grupo. Para crear un nuevo caso puedes solicitarlo escribiendo a nuestro número de soporte.\n Te invitamos a responder nuestra encuesta de satisfacción a través de éste enlace: https://forms.office.com/r/ycHk4FphuH \n Tu opinión nos ayuda a mejorar. Gracias!').then(() => {
           }).catch((error) => {
-            console.error('Error al enviar el mensaje:', error);
           });
         }, 30000); // Establecer un retraso de 30 segundos en milisegundos
       }
@@ -52,17 +47,15 @@ const casos = {};
       }
       
       if (message.body.includes('#clean')) {
-        const regex = /#clean (\d+)/;
-        const match = message.body.match(regex);
-        if (match && match[1]) {
-          const telefono = match[1];
-          eliminarCasosAntiguos(telefono);
-          console.log("limpiando caso para el número de teléfono:", telefono);
-          // haz aquí lo que necesites con el número de teléfono extraído
+        const cleanCommand = message.body.split(' ');
+        if (cleanCommand.length > 1) {
+          const numberToRemove = cleanCommand[1];
+          eliminarCasosAntiguos(numberToRemove);
         } else {
-          console.log("No se pudo extraer el número de teléfono");
+          console.log('El comando #clean requiere un número de teléfono como argumento');
         }
       }
+      
       
     } else {
       console.log("mensaje de usuario");
@@ -88,7 +81,6 @@ const casos = {};
     const registro = `${fecha},${nombre},${telefono},${ticket},${estado},${origen}\n`;
     fs.appendFile('Registros.txt', registro, (err) => {  
       if (err) throw err;
-      console.log('El registro ha sido agregado al archivo');
     });
   }
 
@@ -114,13 +106,10 @@ const casos = {};
   //Enviar nuevo caso
 
   function enviarDatos(client, caso) {
-    console.log(caso.nombre);
     const mensaje = `Nombre: ${caso.nombre}\nTeléfono: ${caso.telefono}\nTipo: #caso\nTicket: ${caso.ticket}`;
-    console.log(mensaje);
     const nombreCompleto = caso.nombre;
     const nombreArray = nombreCompleto.split(" ");
     const nombreCorto = nombreArray[0];
-
     client.sendText('120363094061748798@g.us', mensaje);
     client.sendText(caso.telefono, `Hola ${nombreCorto}, gracias por contactarnos. En breve un agente se comunicará con usted.`);
 
@@ -133,9 +122,7 @@ const casos = {};
     const telefono = message.from;
     
     if (casos.hasOwnProperty(telefono)) {
-      console.log("ignorado");
        } else { 
-      console.log("creando caso");
       const caso = {
         fecha: new Date().toISOString(),
         nombre: message.sender.pushname,
@@ -203,7 +190,6 @@ venom.create().then((client) => {
 
 
   function buscarOrigen(ticket) {
-    console.log('buscando origen...');
     const registros = fs.readFileSync('Registros.txt', 'utf-8');
     const lineas = registros.split('\n');
     
