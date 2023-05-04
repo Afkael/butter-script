@@ -17,10 +17,11 @@ const casos = {};
   //Procesar mensajes de grupos
   
   function mensajeGrupal(message, client) {
+    const ticket = buscarTicket(message.from);
+    const numero = buscarOrigen(ticket);
+    
     if (agenteSoporte.includes(message.author)) {
       if (message.body.includes('#close')) {
-        const ticket = buscarTicket(message.from);
-        const numero = buscarOrigen(ticket);
         capturarRegistro(message.sender.pushname, message.author, ticket, '#close', message.from, new Date().toISOString());
         eliminarCasosAntiguos(numero);
 
