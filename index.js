@@ -8,7 +8,7 @@ const fs = require('fs');
 // Variables globales
 
 // const ignorados = ['']
-const agenteSoporte = ['5493534253426@c.us', '5493492414226@c.us', '5493536579337@c.us'];
+const agenteSoporte = ['5493534253426@c.us', '5493492414226@c.us', '5493536579337@c.us', '5493534797239@c.us'];
 const casos = {};
 
 
