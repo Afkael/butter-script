@@ -2,6 +2,7 @@
 const venom = require('venom-bot');
 const shortid = require('shortid');
 const fs = require('fs');
+const { Console } = require('console');
 
 // Variables globales
 const agenteSoporte = ['5493534253426@c.us', '5493492414226@c.us', '5493536579337@c.us', '5493534797239@c.us'];
@@ -36,6 +37,10 @@ function mensajeGrupal(message, client) {
 
     if (message.body.includes('#milking')) {
       capturarRegistro(message.sender.pushname, message.author, ticket, '#milking', message.from, new Date().toISOString());
+    }
+
+    if (message.body.includes('#warranty')) {
+      capturarRegistro(message.sender.pushname, message.author, ticket, '#warranty', message.from, new Date().toISOString());
     }
 
     if (message.body.includes('#blank')) {
@@ -95,6 +100,7 @@ async function crearCaso(message, client) {
     const userNumber = message.body.match(/Teléfono: (.*)/)[1];
     const groupParticipants = [agentNumber, userNumber];
     const groupId = await client.createGroup(groupName, groupParticipants);
+    Console.log(groupId);
     const origen = groupId.gid._serialized;
     const fecha = new Date().toISOString();
     client.sendText(origen, `Bienvenido, hemos creado este grupo para resolver su caso.`);
