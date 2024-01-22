@@ -1,0 +1,29 @@
+# Dependencias
+/node_modules
+
+# Archivos de entorno
+.env
+
+# WhatsAppWeb.js Authentication and Cache
+/.wwebjs_auth
+/.wwebjs_cache
+
+# Directorios de caché
+.cache
+.next
+
+# Archivos de configuración del IDE o editor de texto
+/.vscode
+/.idea
+*.sublime-workspace
+
+# Archivos de registro
+npm-debug.log
+yarn-error.log
+
+# Archivos de compilación/dist
+/dist
+
+# Archivos temporales
+.tmp
+.temp

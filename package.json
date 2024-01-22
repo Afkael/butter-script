@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "qrcode": "*",
+    "qrcode-terminal": "*",
+    "whatsapp-web.js": "*"
+  }
+}
