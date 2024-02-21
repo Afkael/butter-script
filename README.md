@@ -103,8 +103,7 @@ Cada uno de estos comandos juega un papel crucial en la gestión eficiente de lo
    - Verifica las versiones con los comandos `node -v` y `npm -v` en tu terminal.
 
 2. **Clonar el Repositorio**:
-   - Si tu proyecto está en un repositorio de Git, clónalo en tu sistema local o en tu servidor. Si no, asegúrate de tener una copia del proyecto.
-   - Usa el comando `git clone [URL del repositorio]` si está disponible.
+   - Usa el comando `git clone https://github.com/Afkael/butter-script.git` o copia el proyecto a tu disco local.
 
 3. **Instalar Dependencias**:
    - Navega al directorio del proyecto clonado o copiado.
