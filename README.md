@@ -136,6 +136,7 @@ Cada uno de estos comandos juega un papel crucial en la gestión eficiente de lo
 
 ### Iniciar el Bot
 - **Ejecución del Bot**: Para iniciar el bot, ejecuta `node index.js` en tu terminal. Sigue las instrucciones para autenticar el bot con WhatsApp Web escaneando el código QR.
+- **Recepción de un mensaje**: Envía un mensaje de WhatsApp desde otro dispositivo hacia el número del bot.
 
 ### Gestión de Grupos
 - **Creación de Grupos para Casos de Soporte**:
